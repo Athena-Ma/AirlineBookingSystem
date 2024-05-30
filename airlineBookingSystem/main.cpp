@@ -12,7 +12,7 @@ bool checkInput(string s, int i);
 bool checkInput(string s);
 
 int main(){
-	cout << "Welcome to airline booking system! " << endl;
+	cout << "Welcome! " << endl;
 	ifstream infile;
 	ifstream ifile;
 	string account = "0";
@@ -118,10 +118,9 @@ int main(){
 					while (flag) {
 						cout << "Please type in the terminal station. (0 to return the last step )" << endl
 							<< "ex.SHA" << endl;
-						string s;
-						getline(cin, s);
-						if (!checkInput(s_query)) s_query="aaa";
+						getline(cin, s_query);
 						if (s_query == "0") break;
+						if (!checkInput(s_query)) s_query = "aaa";
 						flag1 = false;
 						for (int i = 0; i < v_flight.size(); i++) {
 							if (v_flight[i].queryFlight(s_query)) flag1 = true;
