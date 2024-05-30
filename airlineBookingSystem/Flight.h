@@ -8,13 +8,18 @@ class Flight {
 	Time time;
 	int ticket_number;
 public:
-	Flight();
-	//Flight(int _flight, Route _route, Time _time, int _ticket);
-	Flight(int _flight, string _start, string _terminal, int _y, int _m, int _d, int _h, int _min, int ticket);
-	int getFlightID();
-	Date getFlightDate();
-	string getTerminal();
-	int getFlightTicket() { return ticket_number; }
+	Flight() { flight_ID = -1;ticket_number = 0;}
+	int getFlightID() const{ return flight_ID;};
+	Date getFlightDate() const { return time;};
+	string getStart() const { return route.getStart(); }
+	string getTerminal() const { return route.getTerminal(); }
+	int getYear() const { return time.getYear(); }
+	int getMonth() const { return time.getMonth(); }
+	int getDay() const { return time.getDay(); }
+	int getHour() const { return time.getHour(); }
+	int getMinute()const { return time.getMinute(); }
+	int getTicketNumber()const { return ticket_number; }
+	int getFlightTicket() const { return ticket_number; }
 	bool queryFlight(int query);
 	bool queryFlight(Date query);
 	bool queryFlight(string query);

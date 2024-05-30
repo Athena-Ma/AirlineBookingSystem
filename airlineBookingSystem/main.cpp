@@ -4,7 +4,6 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <filesystem>
 #include <iomanip>
 #include <cstdio>
 #include "Flight.h"
@@ -13,7 +12,7 @@ bool checkInput(string s, int i);
 bool checkInput(string s);
 
 int main(){
-	cout << "Welcome! " << endl;
+	cout << "Welcome to airline booking system! " << endl;
 	ifstream infile;
 	ifstream ifile;
 	string account = "0";
@@ -56,6 +55,7 @@ int main(){
 		}
 		else if (order == 2) {
 			flag = true;
+			cout << endl;
 			while (flag) {
 				cout << "Please choose a type of query: " << endl
 					<< "\t1.By flight ID." << endl
@@ -64,6 +64,7 @@ int main(){
 					<< "\t0.Return last step." << endl;
 				string s2;
 				cin >> s2;
+				cout << endl;
 				if (checkInput(s2, 1))order2 = stoi(s2);
 				switch (order2) {
 				case 1:
@@ -85,13 +86,18 @@ int main(){
 							cout << "No such flight. " << endl;
 							flag1 = false;
 						}
+						cout << endl;
 					}
 					break;
 				case 2:
-					cout << "Please type in the departure time. (0 to return the last step )" << endl
-						<< "ex.2024 06 07" << endl;
 					while (flag) {
-						cin >> y;
+						cout << "Please type in the departure time. (0 to return the last step )" << endl
+							<< "ex.2024 06 07" << endl;
+						string s;
+						cin.ignore(numeric_limits<streamsize>::max(), '\n');
+						getline(cin, s);
+						if (checkInput(s, 4))y = stoi(s);
+						else continue;
 						if (y == 0)	break;
 						cin >> m >> d;
 						d_query = new Date(y, m, d);
@@ -104,13 +110,17 @@ int main(){
 							flag1 = false;
 						}
 						delete d_query;
+						cout << endl;
 					}
 					break;
 				case 3:
-					cout << "Please type in the terminal station. (0 to return the last step )" << endl
-						<< "ex.PKX" << endl;
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');
 					while (flag) {
-						cin >> s_query;
+						cout << "Please type in the terminal station. (0 to return the last step )" << endl
+							<< "ex.SHA" << endl;
+						string s;
+						getline(cin, s);
+						if (!checkInput(s_query)) s_query="aaa";
 						if (s_query == "0") break;
 						flag1 = false;
 						for (int i = 0; i < v_flight.size(); i++) {
@@ -161,12 +171,8 @@ int main(){
 				cout<<"Please type in the flight ID." << endl;
 				string s;
 				cin >> s;
-				if (s.size() <= 4) {
-					i_query = stoi(s);
-				}
-				else {
-					i_query = -1;
-				}
+				if (checkInput(s, 4)) i_query = stoi(s);
+				else i_query = -1;
 				if (i_query == 0) break;
 				flag1 = false;
 				for (int i = 0; i < v_flight.size(); i++) {
@@ -207,7 +213,7 @@ int main(){
 							ifile.close();
 							ofile.close();
 							remove(filename.c_str());
-							rename(tempFilename.c_str(), filename.c_str());
+							if (rename(tempFilename.c_str(), filename.c_str())==-1)cout << "Error." << endl;
 							cout << "Book sucessfully." << endl;
 							ifile.close();
 							string temp = "./temp.txt";
@@ -217,7 +223,7 @@ int main(){
 							}
 							oInfoFile.close();
 							remove(path.c_str());
-							rename(temp.c_str(), path.c_str());
+							if (rename(temp.c_str(), path.c_str())==-1)cout << "Error." << endl;
 							break;
 						}
 
@@ -269,25 +275,28 @@ int main(){
 				if (checkInput(s, 4))i_query = stoi(s);
 				if (i_query == 0) break;
 				ifile.open(filename);
-				bool flag4 = false;
+				bool flag4 = false;  // Is such flight.
 				bool flag5 = false;  // Is refund sucesseed.
+				bool flag6 = true;  // Is ticket enough
 				int number;
+				cout << endl;
 				while (getline(ifile, line)) {
 					if (line.substr(0, 4) == to_string(i_query)) {
+						flag4 = true;
 						cout << "You are refunding this flight:" << endl;
 						cout << line << endl;
 						cout << "Number: ";
 						string s;
 						cin >> s;
+						cout << endl;
 						if (checkInput(s,3))number = stoi(s);
 						if (number > stoi(line.substr(6, 8)) ){
 							cout<<"No enough tickets. "<<endl;
-							flag4 = true;
+							flag6 = false;
 						}
 						else {
 							flag5 = true;
 						}
-						flag4 = true;
 						break;
 					}
 				}
@@ -295,7 +304,7 @@ int main(){
 				if (!flag4) {
 					cout << "No such flight. " << endl;
 				}
-				else {
+				else if(flag6){
 					string tempFilename = "./" + account + "_temp.txt";
 					ofstream ofile(tempFilename);
 					if (!ofile.is_open()) {
@@ -312,6 +321,7 @@ int main(){
 					ifile.open(filename, ios::in);
 					while (getline(ifile, line)) {
 						if (line.substr(0, 4) == to_string(i_query) ){
+							if (stoi(line.substr(6, 8)) - number == 0) continue;
 							ofile << i_query << " " << setfill(' ') << setw(3) << right << stoi(line.substr(6, 8)) - number;
 						}
 						else {
@@ -321,18 +331,25 @@ int main(){
 					ifile.close();
 					ofile.close();
 					remove(filename.c_str());
-					rename(tempFilename.c_str(), filename.c_str());
+					if (rename(tempFilename.c_str(), filename.c_str())==-1)cout << "Error." << endl;
 					cout << "Refund sucessfully." << endl;
 					ifile.close();
 					string temp = "./temp.txt";
 					ofstream oInfoFile(temp);
 					for (int j = 0; j < v_flight.size(); j++) {
-						cout<< v_flight[j] << endl;
-						oInfoFile << v_flight[j] << endl;
+						oInfoFile << v_flight[j].getFlightID() << " "
+							<< v_flight[j].getStart() << " "
+							<< v_flight[j].getTerminal() << " "
+							<< v_flight[j].getYear() << " "
+							<< v_flight[j].getMonth() << " "
+							<< v_flight[j].getDay() << " "
+							<< v_flight[j].getHour() << " "
+							<< v_flight[j].getMinute() << " "
+							<< v_flight[j].getTicketNumber() << endl;
 					}
 					oInfoFile.close();
 					remove(path.c_str());
-					rename(temp.c_str(), path.c_str());
+					if (rename(temp.c_str(), path.c_str())==-1)cout << "Error." << endl;
 				}
 			}
 		}
@@ -340,9 +357,6 @@ int main(){
 			return 0;
 		}
 		cout << endl << endl << endl;
-	}
-	if (ifile.is_open()) {
-		ifile.close();
 	}
 	return 0;
 }
