@@ -31,7 +31,7 @@ void Airport::showFlights() {
 	}
 }
 
-void Airport::queryFlight(){
+void Airport::queryFlight() {
 	bool flag = true;
 	while (flag) {
 		cout << "Please choose a type of query: " << endl

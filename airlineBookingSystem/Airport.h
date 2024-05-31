@@ -8,10 +8,11 @@ class Airport {
 	string path;
 public:
 	Airport(string _p);
-	void initialize();
-	string getName() { return name; }
-	string getPath() { return path; }
+	string getName() const { return name; }
+	string getPath() const { return path; }
+	vector<Flight> getFlights() const { return v_flights; }
 	void showFlights();
-	vector<Flight> getFlights() { return v_flights; }
+	void initialize();
 	void queryFlight();
+	~Airport(){}
 };

@@ -13,7 +13,7 @@ public:
 	int getYear()const { return year; }
 	int getMonth()const { return month; }
 	int getDay()const { return day; }
-	Date& operator=(const Date& d);
+	Date& operator= (const Date& d);
 	friend ostream& operator << (ostream& ost, Date& d);
 	friend istream& operator >> (istream& ist, Date& d);
 };
