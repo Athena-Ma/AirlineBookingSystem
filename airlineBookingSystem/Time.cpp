@@ -13,6 +13,14 @@ Date& Date::operator=(const Date& d) {
 	return *this;
 }
 
+void Time::print() {
+	cout << year << "."
+		<< setfill('0') << setw(2) << right << month << "."
+		<< setfill('0') << setw(2) << right << day << " "
+		<< setfill('0') << setw(2) << right << hour << ": "
+		<< setfill('0') << setw(2) << right << minute;
+}
+
 ostream& operator << (ostream& ost, Date& d) {
 	ost << d.year << "."
 		<< setfill('0') << setw(2) << right << d.month << "."
@@ -26,11 +34,7 @@ istream& operator >> (istream& ist, Date& d) {
 }
 
 ostream& operator << (ostream& ost, Time& t) {
-	ost << t.year << "." 
-		<< setfill('0') << setw(2) << right << t.month << "." 
-		<< setfill('0') << setw(2) << right << t.day << " " 
-		<< setfill('0') << setw(2) << right << t.hour << ": "
-		<< setfill('0') << setw(2) << right << t.minute;
+	ost << t.year << " "  << t.month << " " << t.day << " " << t.hour << " " << t.minute;
 	return ost;
 }
 

@@ -25,8 +25,16 @@ bool Flight::queryFlight(string query) {
 	return false;
 }
 
+void Flight::print() {
+	cout << setw(4) << left << flight_ID << ": \t";
+	route.print();
+	cout << " \t";
+	time.print();
+	cout << "\tticket: " << setfill(' ') << setw(3) << right << ticket_number << endl;
+}
+
 ostream& operator << (ostream& ost, Flight& f) {
-	ost << setw(4) << left << f.flight_ID << ": \t" << f.route << " \t" << f.time << "\tticket: " << setfill(' ') << setw(3) << right << f.ticket_number;
+	ost << f.flight_ID << " " << f.route << " " << f.time << " " << f.ticket_number;
 	return ost;
 }
 

@@ -24,6 +24,7 @@ public:
 	bool queryFlight(Date query);
 	bool queryFlight(string query);
 	void bookTicket(int number) { if (number <= ticket_number) ticket_number -= number; }
+	void print();
 	friend ostream& operator << (ostream& ost, Flight& t);
 	friend istream& operator >> (istream& ist, Flight& t);
 };

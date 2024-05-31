@@ -27,6 +27,7 @@ public:
 	Time(int _y, int _m, int _d, int _h, int _min) :Date(_y, _m, _d), hour(_h), minute(_min) {};
 	int getHour()const { return hour; }
 	int getMinute()const { return minute; }
+	void print();
 	friend ostream& operator << (ostream& ost, Time& t);
 	friend istream& operator >> (istream& ist, Time& t);
 };

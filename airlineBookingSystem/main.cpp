@@ -48,7 +48,7 @@ int main(){
 		if (order == 1) {
 			cout << "All flights information: " << endl;
 			for (int i = 0; i < v_flight.size(); i++) {
-				cout << v_flight[i] << endl;
+				v_flight[i].print();
 			}
 		}
 
@@ -78,7 +78,7 @@ int main(){
 						for (int i = 0; i < v_flight.size(); i++) {
 							if (v_flight[i].queryFlight(i_query)) {
 								flag1 = true;
-								cout << v_flight[i]<<endl;
+								v_flight[i].print();
 							}
 						}
 						if (!flag1) {
@@ -146,7 +146,7 @@ int main(){
 			cin >> account;
 			if (account != "0") {
 				string filename;
-				filename = "./" + account + ".txt";
+				filename = "./account/" + account + ".txt";
 				ifstream ifile;
 				ifile.open(filename, ios::in);
 				if (!ifile.is_open()) {
@@ -156,8 +156,7 @@ int main(){
 				}
 				ifile.close();
 				cout << "Hello, " << account << endl;
-				bool flag = true;
-				while (flag) {
+				while (true) {
 					cout << "Your ticket: " << endl;
 					bool flag3 = false;  // Is any ticket exist
 					ifile.open(filename);
@@ -166,10 +165,7 @@ int main(){
 						cout << line << endl;
 						flag3 = true;
 					}
-					if (!flag3) {
-						cout << "None." << endl;
-					}
-
+					if (!flag3) cout << "None." << endl;
 					cout << "Please type in the flight ID." << endl;
 					cin >> s;
 					cout << endl;
@@ -177,29 +173,29 @@ int main(){
 					if (checkInput(s, 4)) i_query = stoi(s);
 					else i_query = -1;
 					if (i_query == 0) break;
-					bool flag1 = false;  // Is there any flight IDis the same
+					bool flag1 = false;  // Is there any flight ID is the same
 					for (int i = 0; i < v_flight.size(); i++) {
 						if (v_flight[i].queryFlight(i_query)) {
 							flag1 = true;
 							cout << "You are booking this flight: " << endl;
-							cout << v_flight[i] << endl;
+							v_flight[i].print();
 							cout << "Booking number: ";
 							cin >> s;
 							int number = 0;
 							if (checkInput(s, 3)) number = stoi(s);
 							if (number == 0) break;
 							if (number <= v_flight[i].getFlightTicket()) {
-								string tempFilename = "./" + account + "_temp.txt";
+								string tempFilename = "./account/" + account + "_temp.txt";
 								ofstream ofile(tempFilename);
 								if (!ofile.is_open()) {
 									cout << "Failed to writing." << endl;
 									break;
 								}
 								v_flight[i].bookTicket(number);
-								string line;
-								bool flag2 = false;
+								bool flag2 = false;  // Is the user already have this flight's ticket
 								ifile.close();
 								ifile.open(filename, ios::in);
+								string line;
 								while (getline(ifile, line)) {
 									if (line.substr(0, 4) == to_string(v_flight[i].getFlightID())) {
 										ofile << v_flight[i].getFlightID() << " " << setfill(' ') << setw(3) << right << stoi(line.substr(6, 8)) + number;
@@ -215,9 +211,8 @@ int main(){
 								ifile.close();
 								ofile.close();
 								remove(filename.c_str());
-								if (rename(tempFilename.c_str(), filename.c_str()) == -1)cout << "Error." << endl;
+								if (rename(tempFilename.c_str(), filename.c_str()) == -1) cout << "Error." << endl;
 								cout << "Book sucessfully." << endl;
-								ifile.close();
 								string temp = "./temp.txt";
 								ofstream oInfoFile(temp);
 								for (int j = 0; j < v_flight.size(); j++) {
@@ -225,10 +220,9 @@ int main(){
 								}
 								oInfoFile.close();
 								remove(path.c_str());
-								if (rename(temp.c_str(), path.c_str()) == -1)cout << "Error." << endl;
+								if (rename(temp.c_str(), path.c_str()) == -1) cout << "Error." << endl;
 								break;
 							}
-
 							else {
 								cout << "No enough tickets!" << endl;
 								ifile.close();
@@ -244,6 +238,8 @@ int main(){
 				}
 			}
 		}
+
+		// Refund business
 		else if (order == 4) {
 			cout << "Please log in. (0 to return the last step )" << endl;
 			cout << "Accont: ";
@@ -251,7 +247,7 @@ int main(){
 			if (account == "0") break;
 			ifstream ifile;
 			string filename;
-			filename = "./" + account + ".txt";
+			filename = "./account/" + account + ".txt";
 			ifile.open(filename, ios::in);
 			if (!ifile.is_open()) {
 				ofstream outputFile(filename);
@@ -260,24 +256,23 @@ int main(){
 			}
 			ifile.close();
 			cout << "Hello, " << account << endl;
-			bool flag = true;
-			while (flag) {
-				string line;
+			while (true) {
 				cout << "Your ticket: " << endl;
-				bool flag3 = false;
+				string line;
+				bool flag = false;  // Is user have any tickets
 				ifile.open(filename);
 				while (getline(ifile, line)) {
 					cout << line << endl;
-					flag3 = true;
+					flag = true;
 				}
-				if (!flag3) {
+				if (!flag) {
 					cout << "None." << endl;
 				}
 				ifile.close();
 				cout << "Please type in the flight ID." << endl;
 				cin >> s;
 				int i_query = -1;
-				if (checkInput(s, 4))i_query = stoi(s);
+				if (checkInput(s, 4)) i_query = stoi(s);
 				if (i_query == 0) break;
 				ifile.open(filename);
 				bool flag4 = false;  // Is such flight.
@@ -289,7 +284,9 @@ int main(){
 					if (line.substr(0, 4) == to_string(i_query)) {
 						flag4 = true;
 						cout << "You are refunding this flight:" << endl;
-						cout << line << endl;
+						for (int i = 0; i < v_flight.size(); i++) {
+							if (v_flight[i].getFlightID() == i_query) v_flight[i].print();
+						}
 						cout << "Number: ";
 						cin >> s;
 						cout << endl;
@@ -309,7 +306,7 @@ int main(){
 					cout << "No such flight. " << endl;
 				}
 				else if(flag6){
-					string tempFilename = "./" + account + "_temp.txt";
+					string tempFilename = "./account/" + account + "_temp.txt";
 					ofstream ofile(tempFilename);
 					if (!ofile.is_open()) {
 						cout << "Failed to writing." << endl;
@@ -320,13 +317,12 @@ int main(){
 							v_flight[i].bookTicket(-number);
 						}
 					}
-					string line;
-					ifile.close();
 					ifile.open(filename, ios::in);
+					string line;
 					while (getline(ifile, line)) {
 						if (line.substr(0, 4) == to_string(i_query) ){
-							if (stoi(line.substr(6, 8)) - number == 0) continue;
-							ofile << i_query << " " << setfill(' ') << setw(3) << right << stoi(line.substr(6, 8)) - number;
+							if (stoi(line.substr(6, 8)) == number) continue;
+							ofile << i_query << " " << setfill(' ') << setw(3) << right << stoi(line.substr(6, 8)) - number << endl;
 						}
 						else {
 							ofile << line << endl;
@@ -335,21 +331,13 @@ int main(){
 					ifile.close();
 					ofile.close();
 					remove(filename.c_str());
-					if (rename(tempFilename.c_str(), filename.c_str())==-1)cout << "Error." << endl;
+					if (rename(tempFilename.c_str(), filename.c_str())==-1) cout << "Error." << endl;
 					cout << "Refund sucessfully." << endl;
 					ifile.close();
 					string temp = "./temp.txt";
 					ofstream oInfoFile(temp);
 					for (int j = 0; j < v_flight.size(); j++) {
-						oInfoFile << v_flight[j].getFlightID() << " "
-							<< v_flight[j].getStart() << " "
-							<< v_flight[j].getTerminal() << " "
-							<< v_flight[j].getYear() << " "
-							<< v_flight[j].getMonth() << " "
-							<< v_flight[j].getDay() << " "
-							<< v_flight[j].getHour() << " "
-							<< v_flight[j].getMinute() << " "
-							<< v_flight[j].getTicketNumber() << endl;
+						oInfoFile << v_flight[j] << endl;
 					}
 					oInfoFile.close();
 					remove(path.c_str());
@@ -362,5 +350,4 @@ int main(){
 		}
 		cout << endl << endl << endl;
 	}
-	return 0;
 }
