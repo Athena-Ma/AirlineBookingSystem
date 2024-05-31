@@ -1,0 +1,11 @@
+﻿  Airport.cpp
+  Flight.cpp
+  function.cpp
+  main.cpp
+  Route.cpp
+  Time.cpp
+  User.cpp
+  正在生成代码...
+C:\Users\HASEE\Desktop\airlineBookingSystem\airlineBookingSystem\airlineBookingSystem\User.cpp(240,1): warning C4715: “User::refundTicket”: 不是所有的控件路径都返回值
+  LINK : 没有找到 C:\Users\HASEE\Desktop\airlineBookingSystem\airlineBookingSystem\x64\Debug\airlineBookingSystem.exe 或上一个增量链接没有生成它；正在执行完全链接
+  airlineBookingSystem.vcxproj -> C:\Users\HASEE\Desktop\airlineBookingSystem\airlineBookingSystem\x64\Debug\airlineBookingSystem.exe

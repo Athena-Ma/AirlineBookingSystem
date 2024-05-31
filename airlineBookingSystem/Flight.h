@@ -18,7 +18,6 @@ public:
 	int getDay() const { return time.getDay(); }
 	int getHour() const { return time.getHour(); }
 	int getMinute()const { return time.getMinute(); }
-	int getTicketNumber()const { return ticket_number; }
 	int getFlightTicket() const { return ticket_number; }
 	bool queryFlight(int query);
 	bool queryFlight(Date query);

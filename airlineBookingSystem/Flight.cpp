@@ -11,7 +11,7 @@ bool Flight::queryFlight(int query) {
 
 bool Flight::queryFlight(Date query) {
 	if (this->getFlightDate() == query) {
-		cout << *this << endl;
+		this->print();
 		return true;
 	}
 	return false;
@@ -19,7 +19,7 @@ bool Flight::queryFlight(Date query) {
 
 bool Flight::queryFlight(string query) {
 	if (this->getTerminal() == query) {
-		cout << *this << endl;
+		this->print();
 		return true;
 	}
 	return false;
